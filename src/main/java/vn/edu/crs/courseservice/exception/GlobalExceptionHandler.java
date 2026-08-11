@@ -15,7 +15,8 @@ public class GlobalExceptionHandler {
 
     // Không tìm thấy dữ liệu
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(NoSuchElementException ex) {
+    public ResponseEntity<Map<String, Object>> handleNotFound(
+            NoSuchElementException ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();
 
@@ -23,12 +24,16 @@ public class GlobalExceptionHandler {
         body.put("error", "Not Found");
         body.put("message", ex.getMessage());
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(
+                body,
+                HttpStatus.NOT_FOUND
+        );
     }
 
-    // Trùng dữ liệu
+    // Trùng dữ liệu hoặc dữ liệu không hợp lệ
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequest(IllegalArgumentException ex) {
+    public ResponseEntity<Map<String, Object>> handleBadRequest(
+            IllegalArgumentException ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();
 
@@ -36,12 +41,33 @@ public class GlobalExceptionHandler {
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                body,
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    // Lab 3: xử lý trường hợp môn học hết chỗ
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleConflict(
+            IllegalStateException ex) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+
+        body.put("status", 409);
+        body.put("error", "Conflict");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(
+                body,
+                HttpStatus.CONFLICT
+        );
     }
 
     // Validation (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Object>> handleValidation(
+            MethodArgumentNotValidException ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();
 
@@ -55,12 +81,16 @@ public class GlobalExceptionHandler {
                         .getDefaultMessage()
         );
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                body,
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     // Các lỗi khác
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
+    public ResponseEntity<Map<String, Object>> handleException(
+            Exception ex) {
 
         Map<String, Object> body = new LinkedHashMap<>();
 
@@ -68,6 +98,9 @@ public class GlobalExceptionHandler {
         body.put("error", "Internal Server Error");
         body.put("message", ex.getMessage());
 
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(
+                body,
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 }
