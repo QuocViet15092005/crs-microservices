@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,10 @@ public class AuthHeaderFilter implements GlobalFilter, Ordered {
         boolean isOpen = OPEN_PATHS.stream()
                 .anyMatch(path::startsWith);
 
-        if (isOpen) {
+        boolean isPublicCourseRead = request.getMethod() == HttpMethod.GET &&
+                path.startsWith("/api/courses");
+
+        if (isOpen || isPublicCourseRead) {
             return chain.filter(exchange);
         }
 
